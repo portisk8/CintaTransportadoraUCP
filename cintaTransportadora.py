@@ -1,9 +1,13 @@
 # import the necessary packages
 from collections import deque
+import serial
 import numpy as np
+import time
 import argparse
 import imutils
 import cv2
+import math
+from arduino import Arduino
 
 #Contador
 countV = 0
@@ -13,20 +17,68 @@ flagV = False
 firstA = False
 flagA = False
 
+contadorRadio= 0
+contadorLecturas=0
+ard = Arduino()
+
+# construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-v", "--video",
+	help="path to the (optional) video file")
+ap.add_argument("-b", "--buffer", type=int, default=64,
+	help="max buffer size")
+args = vars(ap.parse_args())
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
 # list of tracked points
 greenLower = (29, 86, 6)
-greenUpper = (60, 255, 255)
-yellowLower = (15, 100, 100)
+greenUpper = (64, 255, 255)
+yellowLower = (20, 100, 100)
 yellowUpper = (25, 255, 255)
-camera = cv2.VideoCapture(1)
+pts = deque(maxlen=args["buffer"])
+ 
+# if a video path was not supplied, grab the reference
+# to the webcam
+if not args.get("video", False):
+	camera = cv2.VideoCapture(0)
+ 
+# otherwise, grab a reference to the video file
+else:
+	camera = cv2.VideoCapture(args["video"])
+
+def cintaOff():
+	#envio un caracter al arduino
+	print("Apagando Cinta ...")
+
+def cintaOn():
+	#envio un caracter al arduino
+	print("Encendiendo Cinta ...")
+	
+
+def tratarVerde():
+	#envio un caracter al arduino
+	print("Despachando Verde ...")
+	ard.sendArduino(b'v')
+
+def tratarAmarillo():
+	#envio un caracter al arduino
+	print("Despachando Amarillo ...")
+	ard.sendArduino(b'a')
+
+def volumen_esfera(radio):
+    volumen=(4/3)*math.pi*radio**3
+    return volumen
 
  #keep looping
 while True:
 	# grab the current frame
 	(grabbed, frame) = camera.read()
  
+	# if we are viewing a video and we did not grab a frame,
+	# then we have reached the end of the video
+	if args.get("video") and not grabbed:
+		break
+
 	# resize the frame, blur it, and convert it to the HSV
 	# color space
 	frame = imutils.resize(frame, width=1000)
@@ -49,6 +101,8 @@ while True:
 	cnts2 = cv2.findContours(mask2.copy(), cv2.RETR_EXTERNAL,
 		cv2.CHAIN_APPROX_SIMPLE)[-2]	
 	center = None
+	# print("Verde : ", len(cnts))
+	# print("Amarillo : ", len(cnts2))
 	# only proceed if at least one contour was found
 	if len(cnts) > 0:
 		# find the largest contour in the mask, then use
@@ -60,6 +114,9 @@ while True:
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		# only proceed if the radius meets a minimum size
 		if radius > 50:
+			#print(str(radius))
+			contadorRadio += radius
+			contadorLecturas +=1
 			flagV = True
 			# draw the circle and centroid on the frame,
 			# then update the list of tracked points
@@ -80,6 +137,8 @@ while True:
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		# only proceed if the radius meets a minimum size
 		if radius > 50:
+			contadorRadio += radius
+			contadorLecturas +=1
 			flagA = True
 			# draw the circle and centroid on the frame,
 			# then update the list of tracked points
@@ -89,27 +148,59 @@ while True:
 		elif (flagA == True):
 			flagA = False
 			firstA = True
+	# update the points queue
+	pts.appendleft(center)
+	# loop over the set of tracked points
+	for i in range(1, len(pts)):
+		# if either of the tracked points are None, ignore
+		# them
+		if pts[i - 1] is None or pts[i] is None:
+			continue
+ 
+		# otherwise, compute the thickness of the line and
+		# draw the connecting lines
+		thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
+		#cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
  
 	# show the frame to our screen
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
  
 	if( flagV == False and firstV == True):
-		firstV = False
-		flagV = False
-		countV =countV + 1
-		print("Verdes ",countV)
+		if(contadorLecturas>0):	
+			firstV = False
+			flagV = False
+			countV =countV + 1
+			print("Verdes ",countV)
+			radioP = (contadorRadio / contadorLecturas * 3)/132.8068571895002
+			print("radio > " + str(radioP))
+			print("volumen > " + str(volumen_esfera(radioP)))
+			contadorRadio =0
+			contadorLecturas =0
+			tratarVerde()
 
-	if( flagA == False and firstA == True):		
-		flagA = False
-		firstA = False
-		countA = countA + 1
-		print("Amarillo ",countA)
+	if( flagA == False and firstA == True):	
+		if(contadorLecturas>0):	
+			flagA = False
+			firstA = False
+			countA = countA + 1
+			radioP = contadorRadio / contadorLecturas
+			radioP = (radioP * 3)/132.8068571895002
+			print(str(radioP))
+			print(str(volumen_esfera(radioP)))
+			contadorRadio =0
+			contadorLecturas =0
+			print("Amarillo ",countA)
+			tratarAmarillo()
 		
 	# if the 'q' key is pressed, stop the loop
 	if key == ord("q"):
 		break
-	
+	if key == ord("s"):
+		cintaOff()
+	if key == ord("a"):
+		cintaOn()
+
 # cleanup the camera and close any open windows
 camera.release()
 cv2.destroyAllWindows()
