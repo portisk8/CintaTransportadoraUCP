@@ -5,7 +5,7 @@ class Arduino:
 	def __init__(self):
 		#SETEO ARDUINO
 		try:
-			self.arduino = serial.Serial('COM3', 9600)
+			self.arduino = serial.Serial('/dev/ttyACM0', 9600)
 			self.arduinoOk = True
 		except:
 			self.arduinoOk= False
