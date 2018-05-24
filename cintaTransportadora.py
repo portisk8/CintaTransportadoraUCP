@@ -176,8 +176,8 @@ while True:
 			countV =countV + 1
 			print("Verdes ",countV)
 			radioP = (contadorRadio / contadorLecturas * 3)/132.8068571895002
-			print("radio > " + str(radioP))
-			print("volumen > " + str(volumen_esfera(radioP)))
+			print("radio > " + str("%.2f" % radioP))
+			print("volumen > " + str("%.2f" % volumen_esfera(radioP)))
 			contadorRadio =0
 			contadorLecturas =0
 			mandaV =0
@@ -190,8 +190,8 @@ while True:
 			countA = countA + 1
 			radioP = contadorRadio / contadorLecturas
 			radioP = (radioP * 3)/132.8068571895002
-			print(str(radioP))
-			print(str(volumen_esfera(radioP)))
+			print("radio > " + str("%.2f" % radioP))
+			print("volumen > " + str("%.2f" % volumen_esfera(radioP)))
 			contadorRadio =0
 			contadorLecturas =0
 			print("Amarillo ",countA)
