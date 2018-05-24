@@ -16,7 +16,7 @@ firstV = False
 flagV = False
 firstA = False
 flagA = False
-
+mandaV=0
 contadorRadio= 0
 contadorLecturas=0
 ard = Arduino()
@@ -118,6 +118,9 @@ while True:
 			contadorRadio += radius
 			contadorLecturas +=1
 			flagV = True
+			mandaV +=1
+			if(mandaV == 1):
+				tratarVerde()
 			# draw the circle and centroid on the frame,
 			# then update the list of tracked points
 			cv2.circle(frame, (int(x), int(y)), int(radius),
@@ -177,7 +180,8 @@ while True:
 			print("volumen > " + str(volumen_esfera(radioP)))
 			contadorRadio =0
 			contadorLecturas =0
-			tratarVerde()
+			mandaV =0
+			#tratarVerde()
 
 	if( flagA == False and firstA == True):	
 		if(contadorLecturas>0):	
