@@ -113,7 +113,7 @@ while True:
 		M = cv2.moments(c)
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		# only proceed if the radius meets a minimum size
-		if radius > 50:
+		if radius > 100:
 			#print(str(radius))
 			contadorRadio += radius
 			contadorLecturas +=1
@@ -136,7 +136,7 @@ while True:
 		M = cv2.moments(c)
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		# only proceed if the radius meets a minimum size
-		if radius > 50:
+		if radius > 100:
 			contadorRadio += radius
 			contadorLecturas +=1
 			flagA = True
