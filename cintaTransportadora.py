@@ -174,10 +174,10 @@ while True:
 			firstV = False
 			flagV = False
 			countV =countV + 1
-			print("Verdes ",countV)
 			radioP = (contadorRadio / contadorLecturas * 3)/132.8068571895002
-			print("radio > " + str("%.2f" % radioP))
-			print("volumen > " + str("%.2f" % volumen_esfera(radioP)))
+			print("radio > " + str("%.2f" % radioP) + 'cm')
+			print("volumen > " + str("%.2f" % volumen_esfera(radioP))+ 'cm^3')
+			print("Verdes:",countV)
 			contadorRadio =0
 			contadorLecturas =0
 			mandaV =0
@@ -190,11 +190,11 @@ while True:
 			countA = countA + 1
 			radioP = contadorRadio / contadorLecturas
 			radioP = (radioP * 3)/132.8068571895002
-			print("radio > " + str("%.2f" % radioP))
-			print("volumen > " + str("%.2f" % volumen_esfera(radioP)))
+			print("radio > " + str("%.2f" % radioP) + 'cm')
+			print("volumen > " + str("%.2f" % volumen_esfera(radioP)) + 'cm^3')
 			contadorRadio =0
 			contadorLecturas =0
-			print("Amarillo ",countA)
+			print("Amarillo: ",countA)
 			tratarAmarillo()
 		
 	# if the 'q' key is pressed, stop the loop

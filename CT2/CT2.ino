@@ -37,7 +37,7 @@ void loop() {
   }
 }
 void tratarVerdeOn(){
-  Serial.println("Se Detecto Lima Verde ...");
+  // Serial.println("Se Detecto Lima Verde ...");
   servoVerde.write(85);
   servoVerde90.write(100);
   delay(2000);
@@ -49,7 +49,7 @@ void tratarVerdeOff(){
   delay(150);
 }
 void tratarAmarilloOn(){
-  Serial.println("Se Detecto Lima Amarilla ...");
+  // Serial.println("Se Detecto Lima Amarilla ...");
   servoAmarillo.write(110);
   servoAmarillo90.write(90);//TODO: Falta configurar!!!
   delay(2000);
