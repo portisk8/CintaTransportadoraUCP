@@ -5,6 +5,7 @@ class Arduino:
 	def __init__(self):
 		#SETEO ARDUINO
 		try:
+			#self.arduino = serial.Serial('COM3', 9600)
 			self.arduino = serial.Serial('/dev/ttyACM0', 9600)
 			self.arduinoOk = True
 		except:
@@ -16,3 +17,7 @@ class Arduino:
 			self.arduino.write(value)
 		else:
 			print("no se pudo enviar el mensaje a Arduino")
+	def getData(self):
+		if(self.arduinoOk):
+			return (self.arduino.read(1))
+		

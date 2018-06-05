@@ -17,10 +17,14 @@ Servo servoVerde;
 //pin 9
 Servo servoVerde90;
 
+int detector = 13; // define the obstacle avoidance sensor interface
+int val;
+
 void setup() {
   Serial.begin(9600);
   //Configuraciones para el Detector de Metales
   initSensorColor();
+  pinMode (detector, INPUT) ;// define the obstacle avoidance sensor output interface
 }
 
 void loop() {
@@ -33,6 +37,14 @@ void loop() {
     }
     if(val =='a'){
       tratarAmarilloOn();
+    }
+  }
+  val = digitalRead (detector) ;
+  while(val == LOW){
+    val = digitalRead (detector) ;
+    if( val ==HIGH){
+      Serial.println(1);
+      delay(500);
     }
   }
 }
