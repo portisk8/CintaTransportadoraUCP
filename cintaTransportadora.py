@@ -113,7 +113,7 @@ while True:
 		M = cv2.moments(c)
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		# only proceed if the radius meets a minimum size
-		if radius > 100:
+		if radius > 150:
 			#print(str(radius))
 			contadorRadio += radius
 			contadorLecturas +=1
@@ -139,7 +139,7 @@ while True:
 		M = cv2.moments(c)
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 		# only proceed if the radius meets a minimum size
-		if radius > 100:
+		if radius > 150:
 			contadorRadio += radius
 			contadorLecturas +=1
 			flagA = True
@@ -176,8 +176,8 @@ while True:
 			countV =countV + 1
 			radioP = (contadorRadio / contadorLecturas * 3)/132.8068571895002
 			print('------------------VERDE-------------------')
-			print("radio > " + str("%.2f" % radioP) + 'cm')
-			print("volumen > " + str("%.2f" % volumen_esfera(radioP))+ 'cm^3')
+			print("radio > " + str("%.2f" % radioP) + ' cm')
+			print("volumen > " + str("%.2f" % volumen_esfera(radioP))+ ' cm^3')
 			print("Verdes:",countV)
 			print('------------------------------------------')
 			contadorRadio =0
@@ -193,8 +193,8 @@ while True:
 			radioP = contadorRadio / contadorLecturas
 			radioP = (radioP * 3)/132.8068571895002
 			print('------------------AMARILLO-----------------')
-			print("radio > " + str("%.2f" % radioP) + 'cm')
-			print("volumen > " + str("%.2f" % volumen_esfera(radioP)) + 'cm^3')
+			print("radio > " + str("%.2f" % radioP) + ' cm')
+			print("volumen > " + str("%.2f" % volumen_esfera(radioP)) + ' cm^3')
 			contadorRadio =0
 			contadorLecturas =0
 			print("Amarillo: ",countA)
