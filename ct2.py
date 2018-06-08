@@ -22,10 +22,10 @@ args = vars(ap.parse_args())
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
 # list of tracked points
-greenLower = (29, 86, 6)
+greenLower = (25, 86, 6)
 greenUpper = (64, 255, 255)
 yellowLower = (15, 100, 100)
-yellowUpper = (25, 255, 255)
+yellowUpper = (30, 255, 255)
 pts = deque(maxlen=args["buffer"])
 
 # if a video path was not supplied, grab the reference
